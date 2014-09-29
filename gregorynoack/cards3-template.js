@@ -40,7 +40,7 @@ makeCard.cardName = function() {
 makeCard.isCard = function(card) { // --> true,false
   // return true if card is a valid card instance made by this factory
   var id = this.mcID;
-  if(card.rank !== this.rank){
+  if(typeof card != "object" || !card.cardId || !card.rank || !card.suit || !card.cardColor || !card.cardName){
     return false;
     }else{
         return true;
