@@ -22,8 +22,6 @@ function makeDeque(values) {
 
 	newDeque.sort = makeDeque.sort;
 
-	newDeque.shuffle = makeDeque.shuffle;
-
 	return newDeque;
 };
 
