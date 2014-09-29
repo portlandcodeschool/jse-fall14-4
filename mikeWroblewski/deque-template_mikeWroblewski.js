@@ -63,8 +63,6 @@ makeDeque.sort = function(compareValsFn) {
 	return (this.arr.sort(compareValsFn));
 };
 
-makeDeque.shuffle = function() {};
-
 
 
 // Part b): make array of 52 card objects here, using your code from Problem 1)
