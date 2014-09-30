@@ -1,60 +1,118 @@
+
 function makeCard(id) {
-    // If id is invalid (out of range, etc)
-    return null;
 
-    // Otherwise build an instance object with an id property,
-    // representing one card, and attach to it four methods:
-    //   rank()
-    //   suit()
-    //   color()
-    //   name()
-    // Each method should be a just reference to the corresponding method
-    //  of the factory itself.
+    if(typeof(id) == 'number' && id < 52 && id > -1){
 
-    return /* that instance here */;
-}
+       var cardRankArr = ['','Ace', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King'];
 
-//-----------------------
-// Methods to be called through factory:
-//-----------------------
+        var cardSuitArr = ['','Hearts','Diamonds', 'Spades', 'Clubs'];
 
-makeCard.isCard = function(card) { // --> true,false
-    // return true if card is a valid card instance made by this factory
+        return{ id: id,
 
-}
+                myCardRankArr: cardRankArr,
 
-//-----------------------------
-// Methods called though instances (where 'this' means the instance):
-//-----------------------------
+                myCardSuitArr: cardSuitArr,
 
-makeCard.rank = function() { // --> 1..13, NaN
-    // code here...
+                getCard: makeCard.isCard,
+
+                getRank: makeCard.rank,
+
+                getSuit: makeCard.suit,
+
+                getColor: makeCard.colorz,
+
+                getName: makeCard.cardName
+            };
+    }        
 };
 
-makeCard.suit = function() { // --> 1..4, NaN
-    // code here...
+makeCard.isCard = function(card) {
+
+    if(card !== undefined){
+        
+        if((typeof(card) == 'number') || Object.keys(card).length === 0){
+        
+            return false;
+        }
+
+        if (card.id >= 52){
+
+            return false;
+        
+        }else{
+
+            return true;
+        }
+    }else{
+
+        if(!(typeof(this.id) == 'number')){
+
+            return false;
+
+        }
+
+        if(this.id >= 52){
+
+            return false;
+        
+        }else{
+
+            return true;
+        }
+    }
+};
+
+
+makeCard.rank = function() {
+    if(!(typeof(this.id) == 'number')){
+        
+        return 'invalid input, is NaN';
+    
+    }else{
+        
+        return Math.floor((this.id/4) + 1);
+    }
+};
+
+makeCard.suit = function() {
+    
+    return (this.id % 4) + 1;
+
 };
    
-makeCard.color = function() { // -->"red,"black",NaN
-    // code here...
-};
+makeCard.colorz = function() { 
 
-makeCard.cardName = function() { //--> string, NaN
-    // This method can't have the key 'name' within the makeCard function,
-    // but instance objects can store a reference to it called 'name'
-
-    // code here...
-};
-
+    var cardSuit = this.getSuit();
     
+    if(cardSuit < 3){
+    
+        var result = 'red';
+    
+    }else{
+    
+        result = 'black';
+    
+    }
+    
+    return result;
+
+};
 
 
-// Testing suite...
+makeCard.cardName = function() { 
+    
+    var cardRank = this.getRank();
+    
+    var cardSuit = this.getSuit();
+
+    return this.myCardRankArr[cardRank] + ' of ' + this.myCardSuitArr[cardSuit];
+    
+};
+
 function assert(claim,message) {
     if (!claim) console.error(message);
 }
 
-// card instances needed for assertions:
 var card0 = makeCard(0);
 var card3 = makeCard(3);
 var card5 = makeCard(5);
@@ -62,22 +120,22 @@ var card51 = makeCard(51);
 
 
 // Test instance methods:
-assert(card0.rank()===1,  "Test 1 failed");
-assert(card3.rank()===1,  "Test 2 failed");
-assert(card51.rank()===13,"Test 3 failed");
-assert(card0.suit()===1,  "Test 4 failed");
-assert(card5.suit()===2,  "Test 5 failed");
-assert(card51.suit()===4, "Test 6 failed");
-assert(card0.color()==='red',   "Test 10 failed");
-assert(card3.color()==='black', "Test 11 failed");
-assert(card5.name()==='Two of Diamonds', "Test 12 failed");
-assert(card51.name()==='King of Clubs',  "Test 13 failed");
+assert(card0.getRank()===1,  "Test 1 failed");
+assert(card3.getRank()===1,  "Test 2 failed");
+assert(card51.getRank()===13,"Test 3 failed");
+assert(card0.getSuit()===1,  "Test 4 failed");
+assert(card5.getSuit()===2,  "Test 5 failed");
+assert(card51.getSuit()===4, "Test 6 failed");
+assert(card0.getColor()==='red',   "Test 10 failed");
+assert(card3.getColor()==='black', "Test 11 failed");
+assert(card5.getName()==='Two of Diamonds', "Test 12 failed");
+assert(card51.getName()==='King of Clubs',  "Test 13 failed");
 
 // Test makeCard.isCard:
-assert(makeCard.isCard(card0),  "Test 21 failed")
-assert(makeCard.isCard(card51), "Test 22 failed")
-assert(!makeCard.isCard(0)),    "Test 23 failed")
-assert(!makeCard.isCard({})),   "Test 24 failed")
+assert(makeCard.isCard(card0),  "Test 21 failed");
+assert(makeCard.isCard(card51), "Test 22 failed");
+assert(!makeCard.isCard(0),    "Test 23 failed");
+assert(!makeCard.isCard({}),   "Test 24 failed");
 
 
 // Test card-making results:
@@ -89,7 +147,7 @@ assert(!makeCard(true),"Test 31 failed");
 
 
 // Test that methods are shared:
-assert(card0 !== card3, "Test 50 failed"); //first prove different cards
+assert(card0 !== card3, "Test 50 failed");           //first prove different cards
 assert(card0.rank === card3.rank, "Test 51 failed");
 assert(card0.suit === card3.suit, "Test 52 failed");
 assert(card0.name === card3.name, "Test 53 failed");
