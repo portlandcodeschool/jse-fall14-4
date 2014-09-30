@@ -2,8 +2,8 @@ function makeCard(id) {
 if(typeof id !== "number" || id > 51 || id <= 0){
     var card = {};
 }else
-  var card = {rank:0, suit:1, color:"", cardName:"", arrRank:[], arrSuit:[]};
-  card.mcID = id;
+  var card = {id:id, rank:0, suit:1, color:"", cardName:"", arrRank:[], arrSuit:[]};
+  var id= id;
   card.rank = makeCard.rank;
   card.suit = makeCard.suit;
   card.color = makeCard.color;
@@ -18,34 +18,31 @@ if(typeof id !== "number" || id > 51 || id <= 0){
   card.cardName(id);
 
 return card;
-}
+};
 
 makeCard.rank = function() { 
-    var id = this.mcID;
-    return Math.floor((id / 4)+1);
-}
+    return Math.floor((this.id / 4)+1);
+};
 makeCard.suit = function() {
-    var id = this.mcID;
-    return (id % 4) + 1;
-}
+    return (this.id % 4) + 1;
+};
 
 makeCard.color = function() {
     return (this.suit() < 3 ? "red" : "black");
-}
+};
 makeCard.cardName = function() {
    // return this.name = this.arrRank[r] + " of " + this.arrSuit[s];
 
    return this.arrRank[this.rank()] + " of " + this.arrSuit[this.suit()];
-}
+};
 makeCard.isCard = function(card) { // --> true,false
   // return true if card is a valid card instance made by this factory
-  var id = this.mcID;
-  if(typeof card != "object" || !card.cardId || !card.rank || !card.suit || !card.cardColor || !card.cardName){
+  if(typeof card != "object" || !card.id || !card.rank || !card.suit || !card.cardColor || !card.cardName){
     return false;
     }else{
         return true;
     }
-}
+};
 
 // Testing suite...
 function assert(claim,message) {
