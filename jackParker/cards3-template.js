@@ -1,17 +1,18 @@
 function makeCard(id) {
-    // If id is invalid (out of range, etc)
-    return null;
+	
+	if((typeof id) !== 'number' || (id < 0) || (id > 51)) return null;
 
-    // Otherwise build an instance object with an id property,
-    // representing one card, and attach to it four methods:
-    //   rank()
-    //   suit()
-    //   color()
-    //   name()
-    // Each method should be a just reference to the corresponding method
-    //  of the factory itself.
+    var card = {
+	    
+	    id: 	id,
+	    rank: 	makeCard.rank,
+	    suit: 	makeCard.suit,
+	    color: 	makeCard.color,
+	    name:	makeCard.cardName
+	    
+    };
 
-    return /* that instance here */;
+    return card;
 }
 
 //-----------------------
@@ -19,8 +20,10 @@ function makeCard(id) {
 //-----------------------
 
 makeCard.isCard = function(card) { // --> true,false
-    // return true if card is a valid card instance made by this factory
 
+	if((typeof card) !== 'object' || !('id' in card)) return false;
+	
+	return true;
 }
 
 //-----------------------------
@@ -28,22 +31,58 @@ makeCard.isCard = function(card) { // --> true,false
 //-----------------------------
 
 makeCard.rank = function() { // --> 1..13, NaN
-    // code here...
+	
+	if((typeof this.id) !== 'number' || (this.id < 0) || (this.id > 52)) return NaN;
+	
+	return Math.floor(this.id / 4 + 1);
+	
 };
 
 makeCard.suit = function() { // --> 1..4, NaN
-    // code here...
+    
+    if((typeof this.id) !== 'number' || (this.id < 0) || (this.id > 52)) return NaN;
+    
+    return (this.id % 4) + 1;
+    
 };
    
 makeCard.color = function() { // -->"red,"black",NaN
-    // code here...
+    
+    if((typeof this.id) !== 'number' || (this.id < 0) || (this.id > 52)) return NaN;
+    
+    return (this.suit(this.id) == 0 || this.suit(this.id) == 1) ? 'red' : 'black';
+    
 };
 
 makeCard.cardName = function() { //--> string, NaN
-    // This method can't have the key 'name' within the makeCard function,
-    // but instance objects can store a reference to it called 'name'
 
-    // code here...
+	if((typeof this.id) !== 'number' || (this.id < 0) || (this.id > 52)) return NaN;
+	
+    var rankWords = [
+		'Ace',
+		'Two',
+		'Three',
+		'Four',
+		'Five',
+		'Six',
+		'Seven',
+		'Eight',
+		'Nine',
+		'Ten',
+		'Jack',
+		'Queen',
+		'King'
+	],
+	
+	suitWords = [
+		'Hearts',
+		'Diamonds',
+		'Spades',
+		'Clubs'
+	];
+	
+	return rankWords[this.rank(this.id) - 1] + ' of ' + suitWords[this.suit(this.id) - 1];
+    
 };
 
     
@@ -74,10 +113,10 @@ assert(card5.name()==='Two of Diamonds', "Test 12 failed");
 assert(card51.name()==='King of Clubs',  "Test 13 failed");
 
 // Test makeCard.isCard:
-assert(makeCard.isCard(card0),  "Test 21 failed")
-assert(makeCard.isCard(card51), "Test 22 failed")
-assert(!makeCard.isCard(0)),    "Test 23 failed")
-assert(!makeCard.isCard({})),   "Test 24 failed")
+assert(makeCard.isCard(card0),  "Test 21 failed");
+assert(makeCard.isCard(card51), "Test 22 failed");
+assert(!makeCard.isCard(0),    "Test 23 failed");
+assert(!makeCard.isCard({}),   "Test 24 failed");
 
 
 // Test card-making results:
