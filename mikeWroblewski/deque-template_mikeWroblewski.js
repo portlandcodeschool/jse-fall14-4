@@ -1,29 +1,35 @@
 //-------
 // Part a): build a deque factory
-function makeDeque(values) {
-	
-	var newDeque = {arr: values};
+	function makeDeque(values) {
+		
+		var newDeque = {arr: values};
 
-	newDeque.top = makeDeque.top;
+		newDeque.top = makeDeque.top;
 
-	newDeque.bottom = makeDeque.bottom;
+		newDeque.bottom = makeDeque.bottom;
 
-	newDeque.pop = makeDeque.pop;
+		newDeque.pop = makeDeque.pop;
 
-	newDeque.push = makeDeque.push;
+		newDeque.push = makeDeque.push;
 
-	newDeque.shift = makeDeque.shift;
+		newDeque.shift = makeDeque.shift;
 
-	newDeque.unshift = makeDeque.unshift;
+		newDeque.unshift = makeDeque.unshift;
 
-	newDeque.cut = makeDeque.cut;
+		newDeque.cut = makeDeque.cut;
 
-	newDeque.map = makeDeque.map;
+		newDeque.map = makeDeque.map;
 
-	newDeque.sort = makeDeque.sort;
+		newDeque.sort = makeDeque.sort;
 
-	return newDeque;
-};
+		newDeque.shuffle = makeDeque.shuffle;
+
+		newDeque.outcast = [];
+
+		newDeque.checkVal = makeDeque.checkVal;
+
+		return newDeque;
+	};
 
 makeDeque.top = function() {
 	var end = this.arr.length-1;
@@ -34,19 +40,28 @@ makeDeque.bottom = function() {
 };
 
 makeDeque.pop = function() {
-	return this.arr.pop();
+	// push this popped element to the outcast array
+	var popped = this.arr.pop();
+	if (popped !== undefined) {
+		this.outcast.push(popped);
+	}
+	return popped;
 };
 
 makeDeque.push = function(val) {
-	return this.arr.push(val); 
+	return this.checkVal(val) && this.arr.push(val);
 };
 
 makeDeque.shift = function() {
-	return this.arr.shift();
+	var shifted = this.arr.shift();
+	if (shifted !== undefined) {
+		this.outcast.push(shifted);
+	}
+	return shifted;
 };
 
 makeDeque.unshift = function(val) {
-	return this.arr.unshift(val);
+		return this.checkVal(val) && this.arr.unshift(val);
 };
 
 makeDeque.cut = function() {
@@ -146,12 +161,45 @@ var theFinalName = deckOfNames.top();
 // Part e): comparison function for sort to shuffle deck
 
 var sortShuffle = function() {
-	return Math.floor(Math.random()*52)
+	return Math.round(Math.random() - 0.5);
+};
 
+
+makeDeque.shuffle = function() {
+
+  var m = this.arr.length, t, i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = this.arr[m];
+    this.arr[m] = this.arr[i];
+    this.arr[i] = t;
+  }
+
+  return this.arr;
 };
 
 
 
+
+// Part f): 
+
+makeDeque.checkVal = function(val) { // returns true if val was outcast
+	var foundAt = this.outcast.indexOf(val);
+	
+	if (foundAt < 0) {// -1 if not found
+			return false;
+	} else {
+	// else found; excise from outcast array
+	this.outcast.splice(foundAt,1);
+	return true;
+	}
+}
 
 
 
