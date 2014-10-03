@@ -3,24 +3,27 @@
 
 function makeCard(id) {
     if ((typeof id)!="number")
-        return ("Hey dude, put in a number.");
+        return false;
     if (id%1 !== 0)
-        return ('Hey man, put in a WHOLE number!');
-    if (id<0 || id>52)
-        return ("Come on...the number must be between 0 and 51.");
+        return false;
+    if (id<0 || id>51)
+        return false;
 
-    var newCard = {};
-    newCard.id = id;
-    newCard.rank = makeCard.rank;
-    newCard.suit = makeCard.suit;
-    newCard.color = makmakeCard.color;
-    newCard.name = makeCard.cardName;
-    return newCard
+    var newCard = {
+        id: id,
+        rank: makeCard.rank,
+        suit: makeCard.suit,
+        color: makeCard.color,
+        name: makeCard.cardName,
+    };
+    return newCard;
 }
 
 //-----------------------
 // Methods to be called through factory:
 //-----------------------
+
+// is a factory method because it's either true or false each time. It's always the saem for each factory use. But....
 
 makeCard.isCard = function(card) {
     if ((typeof card.id)!="number") {
@@ -34,36 +37,44 @@ makeCard.isCard = function(card) {
     } else {
         return true;
     }
-}
+};
  // --> true,false
     // return true if card is a valid card instance made by this factory
-    // is card an object w/ right parameters
+    // is card an object w/ right parameters?
 
 //-----------------------------
 // Methods called though instances (where 'this' means the instance):
 //-----------------------------
 
-this.rank = function(id) {
-    return Math.floor(id/4)+1;
+// These are "instance methods" becuase their result changes every time they are used....every "instance" :)
+
+makeCard.rank = function() {
+    console.log("rank: " + Math.floor((this.id/4)+1));
+    console.log("rank this.id: " + this.id);
+    return Math.floor((this.id/4)+1);
 };
 
-this.suit = function(id) {
-    return ((id%4)+1);
+makeCard.suit = function() {
+    console.log("suit: " + ((this.id%4)+1));
+    console.log("suit this.id: " + this.id);
+    return ((this.id%4)+1);
 };
    
-this.color = function(id) {
-    var cardSuit = suit(id);
+makeCard.color = function() {
+    var cardSuit = this.suit();
+    console.log("cardSuit: " + cardSuit);
+    console.log("this.suit(this.id): " + this.suit());
     return cardSuit && ((cardSuit<3)? "red": "black");
 };
 
-rankNames: ['','Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Jack','Queen','King'];
+var rankNames = ['','Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Jack','Queen','King'];
 
-suitNames: ['','Hearts','Diamonds','Spades','Clubs'];
+var suitNames = ['','Hearts','Diamonds','Spades','Clubs'];
 
-this.cardName = function() {
-    var cardRank = rank(id);
-    var cardSuit = suit(id);
-    return cardRank && cardSuit && (rankNames[cardRank]+' of '+suitNames[cardSuit]);
+makeCard.cardName = function() {
+    var cardRank = this.rank(this.id);
+    var cardSuit = this.suit(this.id);
+    return (rankNames[cardRank]+' of '+suitNames[cardSuit]);
 };
 
     
@@ -93,10 +104,10 @@ assert(card5.name()==='Two of Diamonds', "Test 12 failed");
 assert(card51.name()==='King of Clubs',  "Test 13 failed");
 
 // Test makeCard.isCard:
-assert(makeCard.isCard(card0),  "Test 21 failed")
-assert(makeCard.isCard(card51), "Test 22 failed")
-assert(!makeCard.isCard(0),    "Test 23 failed")
-assert(!makeCard.isCard({}),   "Test 24 failed")
+assert(makeCard.isCard(card0),  "Test 21 failed");
+assert(makeCard.isCard(card51), "Test 22 failed");
+assert(!makeCard.isCard(0),    "Test 23 failed");
+assert(!makeCard.isCard({}),   "Test 24 failed");
 
 
 // Test card-making results:
@@ -113,6 +124,4 @@ assert(card0.rank === card3.rank, "Test 51 failed");
 assert(card0.suit === card3.suit, "Test 52 failed");
 assert(card0.name === card3.name, "Test 53 failed");
 //etc...
-
-
 
