@@ -172,6 +172,8 @@ makeDeque.top = function() {
 };
 makeDeque.bottom = function() {
   //...
+  return this.array[0];
+
 };
 
 makeDeque.pop = function() {
@@ -181,7 +183,7 @@ makeDeque.pop = function() {
 };
 makeDeque.push = function(val) {
 
-  makeDeque.array.pop(val)
+  makeDeque.array.push(val)
   //...
 };
 
